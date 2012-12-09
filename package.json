@@ -1,0 +1,7 @@
+{
+  "name": "hiveshare",
+  "preferGlobal": "true",
+  "version": "0.0.1",
+  "author": "William Becker <wbecker@gmail.com>",
+  "description": "a distributed storage and processing platform"
+}
