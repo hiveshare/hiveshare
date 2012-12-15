@@ -12,6 +12,7 @@ var server = proxyquire("../lib/local-server.js", __dirname, {
     }
   }
 });
+
 server.start();
 
 var suite = APIeasy.describe("hiveshare-object");
