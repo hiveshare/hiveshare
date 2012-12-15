@@ -19,7 +19,6 @@ var suite = APIeasy.describe("hiveshare-object");
 suite
   .discuss('When accessing the local server')
     .use('localhost', 8163)
-    //.setHeader('Content-Type', 'application/json')
     .get("/object", { q: JSON.stringify({ type: {id: 1 } }) })
       .expect(200, {types: [{id: 1}]})
     ["export"](module);
