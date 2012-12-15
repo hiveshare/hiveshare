@@ -3,5 +3,17 @@
   "preferGlobal": "true",
   "version": "0.0.1",
   "author": "William Becker <wbecker@gmail.com>",
-  "description": "a distributed storage and processing platform"
+  "description": "a distributed storage and processing platform",
+  "dependencies": {
+    "express": "3.x",
+    "hiveshare-datastore": "0.0.x"
+  },
+  "devDependencies": {
+    "vows": "0.7.x",
+    "api-easy": "0.2.x",
+    "proxyquire": "0.3.x"
+  },
+  "scripts": {
+    "test": "vows --spec"
+  }
 }
