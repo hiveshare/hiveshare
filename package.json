@@ -5,6 +5,8 @@
   "author": "William Becker <wbecker@gmail.com>",
   "description": "a distributed storage and processing platform",
   "dependencies": {
+    "underscore": "1.4.x",
+    "when": "1.7.x",
     "express": "3.x",
     "hiveshare-datastore": "0.0.x"
   },
