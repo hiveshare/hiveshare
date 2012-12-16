@@ -9,11 +9,11 @@
     "hiveshare-datastore": "0.0.x"
   },
   "devDependencies": {
-    "vows": "0.7.x",
-    "api-easy": "0.2.x",
+    "request": "2.12.x",
+    "buster": "0.6.x",
     "proxyquire": "0.3.x"
   },
   "scripts": {
-    "test": "vows --spec"
+    "test": "node_modules/.bin/buster-test"
   }
 }
