@@ -26,64 +26,63 @@ buster.testCase("When accessing the local server", {
   },
   "list of objects": {
     setUp: function () {
-      this.server = proxyServer("../lib/local-server.js", {
-        getObjects: {
-          types: [{id: 1}]
-        }
-      });
-  
-      this.server.start();
-    },
-    "are retrieved": function (done) {
       this.url.pathname = "/object";
       this.url.query = {
         q: JSON.stringify({ type: {id: 1 } })
       };
-      request.get(url.format(this.url), function (err, response, body) {
-        try {
-          assert.equals(JSON.parse(body), {types: [{id: 1}]});
-        } finally {
-          done();
-        }
-      });
     },
-    tearDown: function () {
-      this.server.end();
-    }
-
-  },
-  "When doesn't have any data": {
-    setUp: function () {
-      this.server = proxyServer("../lib/local-server.js", {
-        getObjects: null
-      });
-  
-      this.remoteServer = proxyServer("../lib/remote-server.js", {
-        getObjects: {
-          types: [{id: 1}]
-        }
-      });
-  
-      this.server.start();
-      this.remoteServer.start();
+    "when has data locally": {
+      setUp: function () {
+        this.server = proxyServer("../lib/local-server.js", {
+          getObjects: {
+            types: [{id: 1}]
+          }
+        });
+    
+        this.server.start();
+      },
+      "are retrieved": function (done) {
+        request.get(url.format(this.url), function (err, response, body) {
+          try {
+            assert.equals(JSON.parse(body), {types: [{id: 1}]});
+          } finally {
+            done();
+          }
+        });
+      },
+      tearDown: function () {
+        this.server.end();
+      }
     },
-    "objects are request from remote server": function (done) {
-      this.url.pathname = "/object";
-      this.url.query = {
-        q: JSON.stringify({ type: {id: 1 } })
-      };
-      request.get(url.format(this.url), function (err, response, body) {
-        try {
-          assert(body);
-          assert.equals(JSON.parse(body), {types: [{id: 1}]});
-        } finally {
-          done();
-        }
-      });
-    },
-    tearDown: function () {
-      this.server.end();
-      this.remoteServer.end();
+    "When doesn't have any data": {
+      setUp: function () {
+        this.server = proxyServer("../lib/local-server.js", {
+          getObjects: null
+        });
+    
+        this.remoteServer = proxyServer("../lib/remote-server.js", {
+          getObjects: {
+            types: [{id: 1}]
+          }
+        });
+    
+        this.server.start();
+        this.remoteServer.start();
+      },
+      "objects are retrieved from remote server": function (done) {
+        request.get(url.format(this.url), function (err, response, body) {
+          try {
+            assert(body);
+            assert.equals(JSON.parse(body), {types: [{id: 1}]});
+          } finally {
+            done();
+          }
+        });
+      },
+      tearDown: function () {
+        this.server.end();
+        this.remoteServer.end();
+      }
     }
   }
 });
