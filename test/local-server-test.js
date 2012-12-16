@@ -1,8 +1,20 @@
+var _ = require("underscore");
 var request = require("request");
 var proxyquire = require("proxyquire");
 var buster = require("buster");
 var url = require("url");
 
+var proxyServer = function (ref, proxyData) {
+  var proxyObj = {};
+  _.each(proxyData, function (value, key) {
+    proxyObj[key] = function () {
+      return value;
+    };
+  });
+  return proxyquire(ref, __dirname, {
+    "hiveshare-datastore": proxyObj
+  });
+};
 
 buster.testCase("When accessing the local server", {
   setUp: function () {
@@ -14,13 +26,9 @@ buster.testCase("When accessing the local server", {
   },
   "list of objects": {
     setUp: function () {
-      this.server = proxyquire("../lib/local-server.js", __dirname, {
-        "hiveshare-datastore": {
-          getObjects: function () {
-            return {
-              types: [{id: 1}]
-            };
-          }
+      this.server = proxyServer("../lib/local-server.js", {
+        getObjects: {
+          types: [{id: 1}]
         }
       });
   
@@ -46,21 +54,13 @@ buster.testCase("When accessing the local server", {
   },
   "When doesn't have any data": {
     setUp: function () {
-      this.server = proxyquire("../lib/local-server.js", __dirname, {
-        "hiveshare-datastore": {
-          getObjects: function () {
-            return null;
-          }
-        }
+      this.server = proxyServer("../lib/local-server.js", {
+        getObjects: null
       });
   
-      this.remoteServer = proxyquire("../lib/remote-server.js", __dirname, {
-        "hiveshare-datastore": {
-          getObjects: function () {
-            return {
-              types: [{id: 1}]
-            };
-          }
+      this.remoteServer = proxyServer("../lib/remote-server.js", {
+        getObjects: {
+          types: [{id: 1}]
         }
       });
   
