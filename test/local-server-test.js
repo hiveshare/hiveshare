@@ -4,6 +4,10 @@ var proxyquire = require("proxyquire");
 var buster = require("buster");
 var url = require("url");
 
+var HiveShareDataModel = require("hiveshare-datamodel");
+var HiveShareObject = HiveShareDataModel.HiveShareObject;
+var Query = HiveShareDataModel.Query;
+
 var proxyServer = function (ref, proxyData) {
   var proxyObj = {};
   _.each(proxyData, function (value, key) {
@@ -28,23 +32,24 @@ buster.testCase("When accessing the local server", {
     setUp: function () {
       this.url.pathname = "/object";
       this.url.query = {
-        q: JSON.stringify({ type: {id: 1 } })
+        q: JSON.stringify(new Query().findObjectWithTypeId(1))
       };
     },
     "when has data locally": {
       setUp: function () {
         this.server = proxyServer("../lib/local-server.js", {
-          getObjects: {
-            types: [{id: 1}]
-          }
+          getObjects: new HiveShareObject(1).addType(1)
         });
-    
+
         this.server.start();
       },
-      "are retrieved": function (done) {
+      "are retrieved locally": function (done) {
         request.get(url.format(this.url), function (err, response, body) {
           try {
-            assert.equals(JSON.parse(body), {types: [{id: 1}]});
+            assert.equals(
+              JSON.parse(body),
+              new HiveShareObject(1).addType(1)
+            );
           } finally {
             done();
           }
@@ -59,13 +64,11 @@ buster.testCase("When accessing the local server", {
         this.server = proxyServer("../lib/local-server.js", {
           getObjects: null
         });
-    
+
         this.remoteServer = proxyServer("../lib/remote-server.js", {
-          getObjects: {
-            types: [{id: 1}]
-          }
+          getObjects: new HiveShareObject(1).addType(1)
         });
-    
+
         this.server.start();
         this.remoteServer.start();
       },
@@ -73,7 +76,10 @@ buster.testCase("When accessing the local server", {
         request.get(url.format(this.url), function (err, response, body) {
           try {
             assert(body);
-            assert.equals(JSON.parse(body), {types: [{id: 1}]});
+            assert.equals(
+              JSON.parse(body),
+              new HiveShareObject(1).addType(1)
+            );
           } finally {
             done();
           }
