@@ -8,7 +8,8 @@
     "underscore": "1.4.x",
     "when": "1.7.x",
     "express": "3.x",
-    "hiveshare-datastore": "0.0.x"
+    "hiveshare-datastore": "0.0.x",
+    "hiveshare-datamodel": "0.0.x"
   },
   "devDependencies": {
     "request": "2.12.x",
